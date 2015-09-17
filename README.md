@@ -34,7 +34,7 @@ The example below shows how to have your PHP application to submit and validate 
 		// Submits the email addresses to Verifalia and waits until the engine
 		// complete their validation.
 	
-		$job = $client
+		$job = $verifalia
 			->emailValidations
 			->submit(array('alice@example.com', 'bob@example.net'), NULL);
 		
@@ -48,6 +48,7 @@ The example below shows how to have your PHP application to submit and validate 
 	catch (Exception $ex) {
 		echo "Code: " . $ex->getCode() . " Message: " . $ex->getMessage();
 	}
+?>
 ```
 
 Internally, the `submit()` function sends the email addresses to the Verifalia servers and then polls them until the validations complete.
@@ -67,14 +68,14 @@ Instead of relying on this automatic polling behavior, you may even manually que
 	try {
 		// Submits the email addresses to Verifalia, *without* waiting for their validation
 	
-		$job = $client
+		$job = $verifalia
 			->emailValidations
 			->submit(array('alice@example.com', 'bob@example.net'));
 		
 		// Waits until the whole email validation job is completed
 		
 		while ($job->status != 'completed') {
-			$client
+			$verifalia
 				->emailValidations
 				->query($job->uniqueID);
 		}
@@ -89,4 +90,5 @@ Instead of relying on this automatic polling behavior, you may even manually que
 	catch (Exception $ex) {
 		echo "Code: " . $ex->getCode() . " Message: " . $ex->getMessage();
 	}
+?>
 ```
