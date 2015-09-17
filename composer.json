@@ -1,5 +1,5 @@
 {
-	"name": "verifalia/verifalia",
+	"name": "verifalia/sdk",
 	"description": "Verifalia REST API - PHP SDK and helper library for email validation",
 	"homepage": "http://verifalia.com",
 	"keywords": ["verifalia", "email", "validation", "verification", "free", "service", "saas", "list", "hygiene", "cleaning", "mx", "smtp", "mailbox", "scrub"],
