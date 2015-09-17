@@ -48,7 +48,7 @@ The example below shows how to have your PHP application to submit and validate 
 	catch (Exception $ex) {
 		echo "Code: " . $ex->getCode() . " Message: " . $ex->getMessage();
 	}
-```php
+```
 
 Internally, the `submit()` function sends the email addresses to the Verifalia servers and then polls them until the validations complete.
 Instead of relying on this automatic polling behavior, you may even manually query the Verifalia servers by way of the `query()` function, as shown below:
@@ -89,4 +89,4 @@ Instead of relying on this automatic polling behavior, you may even manually que
 	catch (Exception $ex) {
 		echo "Code: " . $ex->getCode() . " Message: " . $ex->getMessage();
 	}
-```php
+```
