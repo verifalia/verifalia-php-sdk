@@ -12,7 +12,7 @@
 		"lib-curl": "*"
 	},
 	"support": {
-		"issues": "https://github.com/verifalia/verifalia-php/issues"
+		"issues": "https://github.com/verifalia/verifalia-php-sdk/issues"
 	},
 	"license": "MIT"
 }
