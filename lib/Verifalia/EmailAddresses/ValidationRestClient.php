@@ -13,17 +13,17 @@
 		
 		// Default timeout values, in seconds
 		
-		const DEFAULT_REQUEST_TIMEOUT = 8;
+		const DEFAULT_REQUEST_TIMEOUT = 15;
 		const DEFAULT_QUERY_POLLING_INTERVAL = 5;
 		
 		/** 
 		* Submits email addresses to the Verifalia email validation engine.
 		*
 		* @param string|array $emailAddresses The email address(es) to validate.
-		* @param int $timeout The optional timeout for the request.
+		* @param \Verifalia\WaitForCompletionOptions $waitForCompletionOptions The waiting option for the completion of the email validation job.
 		* @return object An object describing the validation job (which may have been already completed upon returning).
 		*/		
-		function submit($emailAddresses, $timeout = self::DEFAULT_REQUEST_TIMEOUT) {
+		function submit($emailAddresses, $waitForCompletionOptions = \Verifalia\WaitForCompletionOptions::DONT_WAIT) {
 			// Builds the input json structure
 		
 			$entries = array();
@@ -44,6 +44,16 @@
 			
 			// Sends the request to the Verifalia servers
 			
+			if ($waitForCompletionOptions === NULL)
+				$waitForCompletionOptions = new \Verifalia\WaitForCompletionOptions(self::DEFAULT_REQUEST_TIMEOUT, self::DEFAULT_QUERY_POLLING_INTERVAL);
+			
+			if ($waitForCompletionOptions === \Verifalia\WaitForCompletionOptions::DONT_WAIT) {
+				$timeout = self::DEFAULT_REQUEST_TIMEOUT;
+			}
+			else {
+				$timeout = $waitForCompletionOptions->timeout;
+			}
+
 			$result = $this->sendRequest("/email-validations",
 				json_encode($data),
 				self::HTTP_METHOD_POST,
@@ -63,6 +73,13 @@
 					$validation = json_decode($result->body);
 					$validation->status = ($httpStatusCode == self::HTTP_STATUS_OK) ?
 						self::VALIDATION_STATUS_COMPLETED : self::VALIDATION_STATUS_PENDING;
+
+					if ($httpStatusCode == self::HTTP_STATUS_ACCEPTED) {
+						if (!($waitForCompletionOptions === \Verifalia\WaitForCompletionOptions::DONT_WAIT)) {
+							return $this->query($validation->uniqueID, $waitForCompletionOptions);
+						}
+					}
+						
 					return $validation;
 				}
 
@@ -78,23 +95,26 @@
 		* Queries about a specific email validation job, submitted by way of the submit() function.
 		*
 		* @param string|array $emailAddresses The email address(es) to validate.
-		* @param int $timeout The optional timeout for the request.
+		* @param \Verifalia\WaitForCompletionOptions $waitForCompletionOptions The waiting option for the completion of the email validation job.
 		* @return object An object describing the validation job.
 		*/		
-		function query($uniqueID, $waitForCompletionOptions = NULL) {
-			// Special treatment for DontWait
+		function query($uniqueID, $waitForCompletionOptions = \Verifalia\WaitForCompletionOptions::DONT_WAIT) {
+			// Special treatment for DONT_WAIT
 		
-			if ($waitForCompletionOptions === \Verifalia\WaitForCompletionOptions::DONTWAIT)
+			if ($waitForCompletionOptions === \Verifalia\WaitForCompletionOptions::DONT_WAIT)
 				return queryOnce($uniqueID, self::DEFAULT_REQUEST_TIMEOUT);
 		
 			if ($waitForCompletionOptions === NULL)
 				$waitForCompletionOptions = new \Verifalia\WaitForCompletionOptions(self::DEFAULT_REQUEST_TIMEOUT, self::DEFAULT_QUERY_POLLING_INTERVAL);
 
 			while (TRUE) {
-				$result = queryOnce($uniqueID, $waitForCompletionOptions->timeout);
+				$result = $this->queryOnce($uniqueID, $waitForCompletionOptions->timeout);
 				
-				if (!($result === NULL))
-					return $result;
+				if (!($result === NULL)) {
+					if ($result->status === self::VALIDATION_STATUS_COMPLETED) {
+						return $result;
+					}
+				}
 				
 				sleep($waitForCompletionOptions->pollingInterval);
 			}
