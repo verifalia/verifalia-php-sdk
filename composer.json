@@ -1,0 +1,18 @@
+{
+	"name": "verifalia/verifalia",
+	"description": "Verifalia REST API - PHP SDK and helper library for email validation",
+	"homepage": "http://verifalia.com",
+	"keywords": ["verifalia", "email", "validation", "verification", "free", "service", "saas", "list", "hygiene", "cleaning", "mx", "smtp", "mailbox", "scrub"],
+	"autoload": {
+		"psr-0": {
+			"Verifalia\\": "lib/"
+		}
+	},
+	"require": {
+		"lib-curl": "*"
+	},
+	"support": {
+		"issues": "https://github.com/verifalia/verifalia-php/issues"
+	},
+	"license": "MIT"
+}
