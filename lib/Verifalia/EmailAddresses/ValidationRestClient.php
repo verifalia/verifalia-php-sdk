@@ -102,7 +102,7 @@
 			// Special treatment for DONT_WAIT
 		
 			if ($waitForCompletionOptions === \Verifalia\WaitForCompletionOptions::DONT_WAIT)
-				return queryOnce($uniqueID, self::DEFAULT_REQUEST_TIMEOUT);
+				return $this->queryOnce($uniqueID, self::DEFAULT_REQUEST_TIMEOUT);
 		
 			if ($waitForCompletionOptions === NULL)
 				$waitForCompletionOptions = new \Verifalia\WaitForCompletionOptions(self::DEFAULT_REQUEST_TIMEOUT, self::DEFAULT_QUERY_POLLING_INTERVAL);
