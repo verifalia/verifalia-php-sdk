@@ -1,3 +1,5 @@
+[![Packagist](https://img.shields.io/packagist/v/verifalia/sdk.svg?maxAge=2592000)](http://packagist.org/packages/verifalia/sdk)
+
 Verifalia REST API - PHP SDK and helper library
 ================================================
 
