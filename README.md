@@ -85,6 +85,9 @@ The `submit()` function allows to validate multiple addresses easily, in a singl
 Starting from version 1.2, the library also allows to specify custom data (your internal customer or record ID, for example) for each entry to be validated, which are then returned to the caller upon the end of the validation job. To use this feature, just pass a `ValidationEntry` instance (or more than one, by way of an array) to the `submit()` function, specifying your custom string:
 
 ```php
+<?php
+	// ...
+
 	use Verifalia\EmailAddresses\ValidationEntry;
 
 	// ...
@@ -107,6 +110,9 @@ Starting from version 1.2, the library also allows to specify custom data (your 
 Also starting from version 1.2, this SDK allows to specify the desired results quality level for an email validation job. To do that, embed your entries - being them a `ValidationEntry` instance (or more than one, by way of an array) or the email address string (or the array of strings to validate) - inside a new `Validation` instance and pass it to the `submit()` function, specifying the desired level in its constructor, as shown below:
 
 ```php
+<?php
+	// ...
+
 	use Verifalia\EmailAddresses\ValidationEntry;
 	use Verifalia\EmailAddresses\Validation;
 
