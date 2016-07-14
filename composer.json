@@ -10,6 +10,7 @@
 		}
 	},
 	"require": {
+		"php": ">=5.5.0",
 		"lib-curl": "*"
 	},
 	"support": {
