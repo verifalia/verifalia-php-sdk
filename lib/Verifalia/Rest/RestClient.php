@@ -2,9 +2,9 @@
 	namespace Verifalia\Rest;
 	
 	abstract class RestClient {
-		const DEFAULT_API_VERSION = 'v1.1';
+		const DEFAULT_API_VERSION = 'v1.2';
 		const DEFAULT_BASE_URL = 'https://api.verifalia.com/';
-		const USER_AGENT = 'verifalia-rest-client/php/1.0';
+		const USER_AGENT = 'verifalia-rest-client/php/1.2';
 		
 		// Supported HTTP status codes
 

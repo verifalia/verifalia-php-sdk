@@ -19,28 +19,23 @@
 		/** 
 		* Submits email addresses to the Verifalia email validation engine.
 		*
-		* @param string|array $emailAddresses The email address(es) to validate.
+		* @param string|array|\Verifalia\EmailAddresses\Validation|\Verifalia\EmailAddresses\ValidationEntry $entries The email address(es) to validate.
 		* @param \Verifalia\WaitForCompletionOptions $waitForCompletionOptions The waiting option for the completion of the email validation job.
 		* @return object An object describing the validation job (which may have been already completed upon returning).
 		*/		
-		function submit($emailAddresses, $waitForCompletionOptions = \Verifalia\WaitForCompletionOptions::DONT_WAIT) {
+		function submit($entries, $waitForCompletionOptions = \Verifalia\WaitForCompletionOptions::DONT_WAIT) {
 			// Builds the input json structure
 		
-			$entries = array();
-			
-			if (is_array($emailAddresses)) {
-				for($x = 0; $x < count($emailAddresses); $x++) {
-					array_push($entries, array('inputData' => (string)$emailAddresses[$x]));
-				}
-			}
-			else if (is_string($emailAddresses)) {
-				array_push($entries, array('inputData' => $emailAddresses));
+			$validation = NULL;
+		
+			if ($entries instanceof Validation) {
+				$validation = $entries;
 			}
 			else {
-				throw new InvalidArgumentException('submit() only accepts strings or array of strings.');
+				$validation = new Validation($entries);
 			}
 			
-			$data = array('entries' => $entries);
+			$data = array('entries' => $validation->entries, 'quality' => $validation->quality);
 			
 			// Sends the request to the Verifalia servers
 			
@@ -53,7 +48,7 @@
 			else {
 				$timeout = $waitForCompletionOptions->timeout;
 			}
-
+			
 			$result = $this->sendRequest("/email-validations",
 				json_encode($data),
 				self::HTTP_METHOD_POST,
@@ -94,7 +89,7 @@
 		/** 
 		* Queries about a specific email validation job, submitted by way of the submit() function.
 		*
-		* @param string|array $emailAddresses The email address(es) to validate.
+		* @param string $uniqueID The identifier of the validation job to retrieve.
 		* @param \Verifalia\WaitForCompletionOptions $waitForCompletionOptions The waiting option for the completion of the email validation job.
 		* @return object An object describing the validation job.
 		*/		
