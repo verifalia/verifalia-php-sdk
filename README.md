@@ -36,7 +36,7 @@ The example below shows how to have your PHP application to submit and validate 
 	
 		$job = $verifalia
 			->emailValidations
-			->submit('alice@example.com'), NULL);
+			->submit('alice@example.com', NULL);
 		
 		// Displays the validation status code
 
