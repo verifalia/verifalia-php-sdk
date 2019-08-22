@@ -1,6 +1,7 @@
 <?php
-	namespace Verifalia\Exceptions;
+	namespace Verifalia\Exceptions {
 
 	class VerifaliaException extends \Exception {
 	}
+}
 ?>

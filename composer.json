@@ -1,20 +1,19 @@
 {
-	"name": "verifalia/sdk",
-	"version": "1.2",
-	"description": "Verifalia REST API - PHP SDK and helper library for email validation",
-	"homepage": "http://verifalia.com",
-	"keywords": ["verifalia", "email", "validation", "verification", "free", "service", "saas", "list", "hygiene", "cleaning", "mx", "smtp", "mailbox", "scrub"],
-	"autoload": {
-		"psr-0": {
-			"Verifalia\\": "lib/"
-		}
-	},
-	"require": {
-		"php": ">=5.5.0",
-		"lib-curl": "*"
-	},
-	"support": {
-		"issues": "https://github.com/verifalia/verifalia-php-sdk/issues"
-	},
-	"license": "MIT"
+    "name": "verifalia/sdk",
+    "description": "Verifalia REST API - PHP SDK and helper library for email validation",
+    "homepage": "https://verifalia.com",
+    "keywords": ["verifalia", "email", "validation", "verification", "free", "service", "saas", "list", "hygiene", "cleaning", "mx", "smtp", "mailbox", "scrub"],
+    "autoload": {
+        "psr-0": {
+            "Verifalia\\": "lib/"
+        }
+    },
+    "require": {
+        "php": ">=5.5.0",
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "support": {
+        "issues": "https://github.com/verifalia/verifalia-php-sdk/issues"
+    },
+    "license": "MIT"
 }
