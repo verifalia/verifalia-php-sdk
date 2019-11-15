@@ -2,15 +2,13 @@
 
 namespace Verifalia\Common {
 
-	use Verifalia\Common\Direction;
-
-	class Cursor
+    class Cursor
 	{
 		public $cursor;
 		public $direction;
 		public $limit = 0;
 
-		function __construct(string $cursor, Direction $direction = Direction::FORWARD)
+		public function __construct($cursor, $direction = Direction::FORWARD)
 		{
 			$this->cursor = $cursor;
 			$this->direction = $direction;
