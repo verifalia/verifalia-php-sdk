@@ -29,7 +29,7 @@ namespace Verifalia\EmailValidations {
 			} else if ($entry instanceof ValidationEntry) {
 				array_push($this->entries, $entry);
 			} else {
-				throw new InvalidArgumentException('Invalid input entries, please review the data you are about to submit to Verifalia.');
+				throw new \InvalidArgumentException('Invalid input entries, please review the data you are about to submit to Verifalia.');
 			}
 		}
 	}
