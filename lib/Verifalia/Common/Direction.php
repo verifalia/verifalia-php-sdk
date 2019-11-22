@@ -4,7 +4,7 @@ namespace Verifalia\Common {
 
 	class Direction
 	{
-		public const FORWARD = 'forward';
-		public const BACKWARD = 'backward';
+	    const FORWARD = 'forward';
+	    const BACKWARD = 'backward';
 	}
 }

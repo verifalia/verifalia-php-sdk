@@ -105,7 +105,7 @@ namespace Verifalia\EmailValidations {
 		 * the email validation.
 		 * @return object An object describing the validation job.
 		 */
-		public function get(string $id, $waitingStrategy = false)
+		public function get($id, $waitingStrategy = false)
 		{
 			$response = $this->client->sendRequest(MultiplexedRestClient::HTTP_METHOD_GET, "email-validations/{$id}");
 			$statusCode = $response->getStatusCode();
@@ -199,7 +199,7 @@ namespace Verifalia\EmailValidations {
 			return new Validation($partialValidation->overview, $allEntries);
 		}
 
-		private function listEntriesSegmented(string $id, Cursor $cursor)
+		private function listEntriesSegmented($id, Cursor $cursor)
 		{
 			// Generate the additional parameters, where needed
 
@@ -237,7 +237,7 @@ namespace Verifalia\EmailValidations {
 		 * @param string $id The ID of the email validation job to delete.
 		 * @return void
 		 */
-		public function delete(string $id)
+		public function delete($id)
 		{
 			// Sends the request to the Verifalia servers
 

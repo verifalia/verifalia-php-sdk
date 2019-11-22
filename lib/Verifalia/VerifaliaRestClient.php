@@ -12,7 +12,7 @@ namespace Verifalia {
 	 */
 	class VerifaliaRestClient
 	{
-		private const DEFAULT_BASE_URIS = [
+	    const DEFAULT_BASE_URIS = [
 			'https://api-1.verifalia.com/',
 			'https://api-2.verifalia.com/',
 			'https://api-3.verifalia.com/'
@@ -30,7 +30,7 @@ namespace Verifalia {
 
 		/**
 		 * VerifaliaRestClient accepts an array of constructor parameters.
-		 * 
+		 *
 		 * Here's an example of creating a VerifaliaRestClient using the username/password credentials
 		 * for a user:
 		 *
@@ -45,7 +45,7 @@ namespace Verifalia {
 		 * - password: The password of the Verifalia user to authenticate with.
 		 *
 		 * @param array $options VerifaliaRestClient configuration settings.
-		 * 
+		 *
 		 * @see \Verifalia\VerifaliaRestClientOptions for a list of available options.
 		 */
 		public function __construct($options)

@@ -10,7 +10,7 @@ namespace Verifalia {
 		 * known as sub-accounts) with just the required permissions, for improved security. To create a new user or
 		 * manage existing ones, please visit https://verifalia.com/client-area#/users
 		 */
-		public const USERNAME = 'username';
+		const USERNAME = 'username';
 
 		/**
 		 * password: (string) The password of the Verifalia user to authenticate with. While authenticating with your
@@ -18,12 +18,12 @@ namespace Verifalia {
 		 * known as sub-accounts) with just the required permissions, for improved security. To create a new user or
 		 * manage existing ones, please visit https://verifalia.com/client-area#/users
 		 */
-		public const PASSWORD = 'password';
+		const PASSWORD = 'password';
 
 		/**
 		 * baseUris: (string[]) The base URIs of the Verifalia API - please do *NOT* set these unless you have been
 		 * instructed to do so by the Verifalia support team.
 		 */
-		public const BASE_URIS = 'baseUris';
+		const BASE_URIS = 'baseUris';
 	}
 }
