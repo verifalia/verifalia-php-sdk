@@ -7,7 +7,7 @@ namespace Verifalia\EmailValidations {
 		public $waitForCompletion = false;
 		public $progress = null;
 
-		public function __construct(bool $waitForCompletion, callable $progress = null)
+		public function __construct($waitForCompletion, callable $progress = null)
 		{
 			$this->waitForCompletion = $waitForCompletion;
 			$this->progress = $progress;

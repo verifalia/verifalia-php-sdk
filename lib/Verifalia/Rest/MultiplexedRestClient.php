@@ -2,16 +2,16 @@
 
 namespace Verifalia\Rest {
 
-    use GuzzleHttp\Client;
-    use GuzzleHttp\RequestOptions;
-    use Verifalia\Exceptions\VerifaliaException;
-    use Verifalia\Security\IAuthenticator;
+    use \GuzzleHttp\Client;
+    use \GuzzleHttp\RequestOptions;
+    use \Verifalia\Exceptions\VerifaliaException;
+    use \Verifalia\Security\IAuthenticator;
 
     class MultiplexedRestClient
     {
-        const PACKAGE_VERSION = '2.0';
-        const DEFAULT_API_VERSION = 'v2.0';
-        const USER_AGENT = 'verifalia-rest-client/php/2.0';
+        const PACKAGE_VERSION = '2.1';
+        const DEFAULT_API_VERSION = 'v2.1';
+        const USER_AGENT = 'verifalia-rest-client/php/2.1';
 
         // Supported HTTP status codes
 

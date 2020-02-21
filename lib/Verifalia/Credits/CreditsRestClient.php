@@ -2,8 +2,8 @@
 
 namespace Verifalia\Credits {
 
-	use Verifalia\Exceptions\VerifaliaException;
-	use Verifalia\Rest\MultiplexedRestClient;
+	use \Verifalia\Exceptions\VerifaliaException;
+	use \Verifalia\Rest\MultiplexedRestClient;
 
 	/**
 	 * Allows to submit and manage email validations using the Verifalia service.
@@ -12,7 +12,7 @@ namespace Verifalia\Credits {
 	{
 		private $client = NULL;
 
-		public function __construct(MultiplexedRestClient $client)
+		public function __construct($client)
 		{
 			$this->client = $client;
 		}

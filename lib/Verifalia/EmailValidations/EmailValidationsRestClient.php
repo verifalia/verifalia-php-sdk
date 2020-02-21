@@ -2,11 +2,11 @@
 
 namespace Verifalia\EmailValidations {
 
-	use Verifalia\Exceptions\VerifaliaException;
-	use Verifalia\Rest\MultiplexedRestClient;
-	use Verifalia\EmailValidations\ValidationStatus;
-	use Verifalia\Common\Cursor;
-	use Verifalia\Common\Direction;
+	use \Verifalia\Exceptions\VerifaliaException;
+	use \Verifalia\Rest\MultiplexedRestClient;
+	use \Verifalia\EmailValidations\ValidationStatus;
+	use \Verifalia\Common\Cursor;
+	use \Verifalia\Common\Direction;
 
 	/**
 	 * Allows to submit and manage email validations using the Verifalia service.
@@ -55,6 +55,10 @@ namespace Verifalia\EmailValidations {
 
 			if ($validation->priority !== null) {
 				$data['priority'] = $validation->priority;
+			}
+
+			if ($validation->retention !== null) {
+				$data['retention'] = $validation->retention;
 			}
 
 			// Sends the request to the Verifalia servers

@@ -8,6 +8,7 @@ namespace Verifalia\EmailValidations {
 		public $quality = null;
 		public $deduplication = null;
 		public $priority = null;
+		public $retention = null;
 
 		public function __construct($entries)
 		{
