@@ -11,7 +11,6 @@ namespace Verifalia\Rest {
     {
         const PACKAGE_VERSION = '2.1';
         const DEFAULT_API_VERSION = 'v2.1';
-        const USER_AGENT = 'verifalia-rest-client/php/2.1';
 
         // Supported HTTP status codes
 
@@ -38,9 +37,11 @@ namespace Verifalia\Rest {
             shuffle($this->shuffledBaseUris);
 
             $this->authenticator = $authenticator;
+
+            echo "Running package version " . self::PACKAGE_VERSION;
         }
 
-        public function sendRequest($method = self::HTTP_METHOD_GET, $relativePath, $query = null, $data = null)
+        public function sendRequest($method, $relativePath, $query = null, $data = null)
         {
             $errors = [];
 
@@ -103,7 +104,7 @@ namespace Verifalia\Rest {
                 return $response;
             }
 
-            // We have iterated all of the base URIs at this point, so we should report the issue
+            // We have iterated all the base URIs at this point, so we should report the issue
 
             throw new VerifaliaException('All the endpoints are unreachable. ' . join(',', $errors));
         }

@@ -33,7 +33,7 @@ namespace Verifalia\EmailValidations {
 					$delay += $minutes * 60;
 					$delay += $hours * 3600;
 
-					// TODO: Follow the ETA more precisely: as a safenet, we are constraining it to a maximum of 30s for now.
+					// TODO: Follow the ETA more precisely: as a safety net, we are constraining it to a maximum of 30s for now.
 	
 					$delay = max(0.5, min(30, $delay));
 				}
