@@ -24,27 +24,17 @@
  * SOFTWARE.
  */
 
-namespace Verifalia\EmailValidations {
+namespace Verifalia\Security {
+
+    use Verifalia\Internal\Rest\MultiplexedRestClient;
 
     /**
-     * Represents a snapshot of an email validation job, including its overview and any validated entries.
+     * Represents an object which can authenticate a REST client against the Verifalia API.
      */
-	class Validation
-	{
-        /**
-         * @var ValidationOverview Overview information for this email validation job.
-         */
-		public $overview;
+    interface AuthenticationProvider
+    {
+        public function authenticate(MultiplexedRestClient $restClient, &$requestOptions);
 
-        /**
-         * @var ValidationEntry[] The items that have been validated as part of this email validation job.
-         */
-		public $entries;
-
-		public function __construct($overview, $entries = null)
-		{
-			$this->overview = $overview;
-			$this->entries = $entries;
-		}
-	}
+        public function handleUnauthorizedRequest(MultiplexedRestClient $restClient);
+    }
 }

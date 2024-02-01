@@ -27,32 +27,32 @@
 namespace Verifalia\EmailValidations {
 
     /**
-     * A single item of a `ValidationRequest` containing an email address to validate.
-     * @see ValidationRequest
+     * Contains values for the advertised quality levels. Quality levels determine how Verifalia validates email
+     * addresses, including whether and how the automatic reprocessing logic occurs (for transient statuses) and the
+     * verification timeouts settings.
      */
-	class ValidationRequestEntry
-	{
+    class QualityLevelName
+    {
         /**
-         * @var string The input string to validate, which should represent an email address.
+         * The Standard quality level. Suitable for most businesses, provides good results for the vast majority of
+         * email addresses; features a single validation pass and 5 second anti-tarpit time; less suitable for
+         * validating email addresses with temporary issues (mailbox over quota, greylisting, etc.) and slower mail
+         * exchangers.
          */
-		public $inputData;
+        const STANDARD = 'Standard';
 
         /**
-         * @var ?string An optional, custom string which is passed back upon completing the validation job.
-         * Setting this value is useful in the event you wish to have a custom reference of this `ValidationRequestEntry`
-         * with something else (for example, a record in your database).
-         * This value accepts a string with a maximum length of 50 characters.
+         * The High quality level. Much higher quality, featuring 3 validation passes and 50 seconds of anti-tarpit
+         * time, so you can even validate most addresses with temporary issues, or slower mail exchangers.
          */
-		public $custom = null;
+        const HIGH = 'High';
 
         /**
-         * @param string $inputData The input string to validate, which should represent an email address.
-         * @param ?string $custom An optional, custom string which is passed back upon completing the validation job.
+         * The Extreme quality level. Unbeatable, top-notch quality for professionals who need the best results the
+         * industry can offer: performs email validations at the highest level, with 9 validation passes and 2 minutes
+         * of anti-tarpit time.
          */
-		public function __construct(string $inputData, string $custom = null)
-		{
-			$this->inputData = $inputData;
-			$this->custom = $custom;
-		}
-	}
+        const EXTREME = 'Extreme';
+    }
+
 }

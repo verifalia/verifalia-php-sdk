@@ -24,27 +24,35 @@
  * SOFTWARE.
  */
 
-namespace Verifalia\EmailValidations {
+namespace Verifalia\Internal {
+
+    use DateInterval;
 
     /**
-     * Represents a snapshot of an email validation job, including its overview and any validated entries.
+     * FOR INTERNAL USE ONLY. Contains helper functions for the JSON serializer / deserializer.
      */
-	class Validation
-	{
-        /**
-         * @var ValidationOverview Overview information for this email validation job.
-         */
-		public $overview;
+    class ParserUtils
+    {
+        public static function timeSpanStringToDateInterval(string $timeSpan) : DateInterval
+        {
+            preg_match('/^(?:(\d*)\.)?(?:(\d{1,2}))\:(?:(\d{1,2}))\:(?:(\d{1,2}))$/', $timeSpan, $matches);
 
-        /**
-         * @var ValidationEntry[] The items that have been validated as part of this email validation job.
-         */
-		public $entries;
+            $days = isset($matches[1]) ? (int)$matches[1] : 0;
+            $hours = (int)$matches[2];
+            $minutes = (int)$matches[3];
+            $seconds = (int)$matches[4];
 
-		public function __construct($overview, $entries = null)
-		{
-			$this->overview = $overview;
-			$this->entries = $entries;
-		}
-	}
+            return new DateInterval("P{$days}DT{$hours}H{$minutes}M{$seconds}S");
+        }
+
+        public static function dateIntervalToTimeSpanString(DateInterval $interval) : string
+        {
+            if ($interval->days > 0)
+            {
+                return $interval->format("%d.H:I:S");
+            }
+
+            return $interval->format("H:I:S");
+        }
+    }
 }

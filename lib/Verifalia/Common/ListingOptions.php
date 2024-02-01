@@ -24,27 +24,24 @@
  * SOFTWARE.
  */
 
-namespace Verifalia\EmailValidations {
+namespace Verifalia\Common {
 
     /**
-     * Represents a snapshot of an email validation job, including its overview and any validated entries.
+     * The options for a listing operation against the Verifalia API.
      */
-	class Validation
-	{
-        /**
-         * @var ValidationOverview Overview information for this email validation job.
-         */
-		public $overview;
+    class ListingOptions
+    {
 
         /**
-         * @var ValidationEntry[] The items that have been validated as part of this email validation job.
+         * @var Direction The direction of the listing.
          */
-		public $entries;
+        public $direction = Direction::FORWARD;
 
-		public function __construct($overview, $entries = null)
-		{
-			$this->overview = $overview;
-			$this->entries = $entries;
-		}
-	}
+        /**
+         * @var int The maximum number of items to return with a listing request. The limit must be `0` (meaning no
+         * limit will be enforced) or a positive integer. The Verifalia API may choose to override the specified limit
+         * if it is either too small or too large.
+         */
+        public $limit = 0;
+    }
 }

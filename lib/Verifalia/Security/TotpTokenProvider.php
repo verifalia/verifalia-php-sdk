@@ -24,27 +24,10 @@
  * SOFTWARE.
  */
 
-namespace Verifalia\EmailValidations {
+namespace Verifalia\Security {
 
-    /**
-     * Represents a snapshot of an email validation job, including its overview and any validated entries.
-     */
-	class Validation
-	{
-        /**
-         * @var ValidationOverview Overview information for this email validation job.
-         */
-		public $overview;
-
-        /**
-         * @var ValidationEntry[] The items that have been validated as part of this email validation job.
-         */
-		public $entries;
-
-		public function __construct($overview, $entries = null)
-		{
-			$this->overview = $overview;
-			$this->entries = $entries;
-		}
-	}
+    interface TotpTokenProvider
+    {
+        function provideTotpToken();
+    }
 }

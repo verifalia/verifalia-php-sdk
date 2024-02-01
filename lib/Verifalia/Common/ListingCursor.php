@@ -24,27 +24,20 @@
  * SOFTWARE.
  */
 
-namespace Verifalia\EmailValidations {
+namespace Verifalia\Common {
 
     /**
-     * Represents a snapshot of an email validation job, including its overview and any validated entries.
+     * A cursor to be used while traversing a list of items which provides key-set navigation.
      */
-	class Validation
-	{
+    class ListingCursor extends ListingOptions {
         /**
-         * @var ValidationOverview Overview information for this email validation job.
+         * @var string The raw, opaque cursor string returned by the Verifalia API.
          */
-		public $overview;
+		public $cursor;
 
-        /**
-         * @var ValidationEntry[] The items that have been validated as part of this email validation job.
-         */
-		public $entries;
-
-		public function __construct($overview, $entries = null)
+		public function __construct($cursor)
 		{
-			$this->overview = $overview;
-			$this->entries = $entries;
+			$this->cursor = $cursor;
 		}
 	}
 }

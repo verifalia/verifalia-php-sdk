@@ -24,27 +24,21 @@
  * SOFTWARE.
  */
 
-namespace Verifalia\EmailValidations {
+namespace Verifalia\Internal\Rest {
 
     /**
-     * Represents a snapshot of an email validation job, including its overview and any validated entries.
+     * FOR INTERNAL USE ONLY. This class contains a list of invocation options for the multiplexed REST client.
      */
-	class Validation
-	{
+    class InvocationOptions
+    {
         /**
-         * @var ValidationOverview Overview information for this email validation job.
+         * @var bool
          */
-		public $overview;
+        public $skipAuthentication;
 
         /**
-         * @var ValidationEntry[] The items that have been validated as part of this email validation job.
+         * @var ?array
          */
-		public $entries;
-
-		public function __construct($overview, $entries = null)
-		{
-			$this->overview = $overview;
-			$this->entries = $entries;
-		}
-	}
+        public $requestOptions;
+    }
 }

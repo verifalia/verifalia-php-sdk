@@ -22,29 +22,26 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */
+ */ /** @noinspection PhpUnused */
 
 namespace Verifalia\EmailValidations {
 
+    use DateInterval;
+
     /**
-     * Represents a snapshot of an email validation job, including its overview and any validated entries.
+     * Provides progress details for a validation job, accessible through the `Validation->progress` field.
+     * @see Validation
      */
-	class Validation
+    class ValidationProgress
 	{
         /**
-         * @var ValidationOverview Overview information for this email validation job.
+         * @var double The percentage of completed entries, expressed as a decimal ranging from 0 to 1.
          */
-		public $overview;
+		public $percentage;
 
         /**
-         * @var ValidationEntry[] The items that have been validated as part of this email validation job.
+         * @var ?DateInterval An estimated time span required to complete the entire job, if available.
          */
-		public $entries;
-
-		public function __construct($overview, $entries = null)
-		{
-			$this->overview = $overview;
-			$this->entries = $entries;
-		}
+		public $estimatedTimeRemaining;
 	}
 }

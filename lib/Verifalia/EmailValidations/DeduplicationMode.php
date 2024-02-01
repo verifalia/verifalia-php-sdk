@@ -27,24 +27,27 @@
 namespace Verifalia\EmailValidations {
 
     /**
-     * Represents a snapshot of an email validation job, including its overview and any validated entries.
+     * The strategy employed by Verifalia to identify duplicate email addresses during a multiple items validation process.
+     * Duplicated items (after the first occurrence) will have the `Duplicate` status.
+     * @see ValidationEntry
      */
-	class Validation
-	{
+    class DeduplicationMode
+    {
         /**
-         * @var ValidationOverview Overview information for this email validation job.
+         * Duplicates detection is turned off.
          */
-		public $overview;
+        const OFF = 'Off';
 
         /**
-         * @var ValidationEntry[] The items that have been validated as part of this email validation job.
+         * Uses an algorithm with strict safe rules to accurately identify duplicates, ensuring the absence of false
+         * positives.
          */
-		public $entries;
+        const SAFE = 'Safe';
 
-		public function __construct($overview, $entries = null)
-		{
-			$this->overview = $overview;
-			$this->entries = $entries;
-		}
-	}
+        /**
+         * Detects duplicates by applying relaxed rules that assume modern configurations of target email service
+         * providers, excluding the broader options allowed by RFCs from the '80s.
+         */
+        const RELAXED = 'Relaxed';
+    }
 }

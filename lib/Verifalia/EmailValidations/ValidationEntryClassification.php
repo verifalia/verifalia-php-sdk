@@ -27,24 +27,28 @@
 namespace Verifalia\EmailValidations {
 
     /**
-     * Represents a snapshot of an email validation job, including its overview and any validated entries.
+     * A classification of the validation status of an email validation entry.
      */
-	class Validation
-	{
+    class ValidationEntryClassification
+    {
         /**
-         * @var ValidationOverview Overview information for this email validation job.
+         * An entry marked as `Deliverable` refers to an email address which is deliverable.
          */
-		public $overview;
+        const DELIVERABLE = 'Deliverable';
 
         /**
-         * @var ValidationEntry[] The items that have been validated as part of this email validation job.
+         * An entry marked as `Risky` refers to an email address which could be no longer valid.
          */
-		public $entries;
+        const RISKY = 'Risky';
 
-		public function __construct($overview, $entries = null)
-		{
-			$this->overview = $overview;
-			$this->entries = $entries;
-		}
-	}
+        /**
+         * An entry marked as `Undeliverable` refers to an email address which is either invalid or no longer deliverable.
+         */
+        const UNDELIVERABLE = 'Undeliverable';
+
+        /**
+         * An entry marked as `Unknown` contains an email address whose deliverability is unknown.
+         */
+        const UNKNOWN = 'Unknown';
+    }
 }

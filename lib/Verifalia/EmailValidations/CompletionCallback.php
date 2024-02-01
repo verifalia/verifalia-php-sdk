@@ -27,24 +27,37 @@
 namespace Verifalia\EmailValidations {
 
     /**
-     * Represents a snapshot of an email validation job, including its overview and any validated entries.
+     * Provides optional configuration settings for invoking a completion callback upon the completion of an email
+     * validation job.
      */
-	class Validation
-	{
+    class CompletionCallback
+    {
         /**
-         * @var ValidationOverview Overview information for this email validation job.
+         * @var string A callback URL that Verifalia will invoke once the results for the email verification job are
+         * ready.
          */
-		public $overview;
+        public $url;
 
         /**
-         * @var ValidationEntry[] The items that have been validated as part of this email validation job.
+         * @var ?string If set, allows the specification of a schema version that Verifalia will follow when invoking
+         * the callback. If unset, the default callback schema version available to the target API version will be used.
          */
-		public $entries;
+        public $version;
 
-		public function __construct($overview, $entries = null)
-		{
-			$this->overview = $overview;
-			$this->entries = $entries;
-		}
-	}
+        /**
+         * @var bool If set to true, skips the server certificate validation for the external callback server. This is
+         * useful for testing purposes during development, especially when the callback server uses a self-signed
+         * certificate.
+         */
+        public $skipServerCertificateValidation;
+
+        /**
+         * @param string $url A callback URL that Verifalia will invoke once the results for the email verification job
+         * are ready.
+         */
+        public function __construct(string $url)
+        {
+            $this->url = $url;
+        }
+    }
 }
