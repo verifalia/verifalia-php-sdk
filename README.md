@@ -274,6 +274,47 @@ foreach ($job->entries as $entry) {
 // samantha42@yahoo.de => Deliverable
 ```
 
+### How to import and submit a file for validation
+
+This library includes support for submitting and validating files with email addresses, including:
+
+- **plain text files** (.txt), with one email address per line;
+- **comma-separated values** (.csv), **tab-separated values** (.tsv) and other delimiter-separated values files;
+- **Microsoft Excel spreadsheets** (.xls and .xlsx).
+
+To submit and validate files, one can still use the `submit()` function mentioned
+above, passing either the full name of the file to submit to Verifalia or a resource stream. Along with that, it is also possible to specify the eventual starting
+and ending rows to process, the column, the sheet index, the line ending and the
+delimiter - depending of course on the nature of the submitted file (see
+`FileValidationRequest` in the source to learn more).
+
+Here is how to submit and verify an Excel file, for example:
+
+```php
+$job = $verifalia->emailValidations->submit(new FileValidationRequest('that-file.xlsx'));
+```
+
+For more advanced options, just set the relevant properties in the `FileValidationRequest` instance:
+
+```php
+$request = new FileValidationRequest('that-file.xlsx');
+$request->sheet  3;
+$request->startingRow = 1;
+$request->column = 5;
+$request->quality = QualityLevelName::HIGH;
+
+$job = $verifalia->emailValidations->submit($request);
+```
+
+And here is another example, showing how to submit a resource stream instance and specifying the
+MIME content type of the file, which is automatically determined from the file extension in
+the event you pass file name instead:
+
+```php
+$stream = fopen('my-list.txt', 'rb');
+$job = $verifalia->emailValidations->submit(new FileValidationRequest($stream, 'text/plain'));
+```
+
 ### Processing options
 
 While submitting one or more email addresses for verification, it is possible to specify several
@@ -431,6 +472,28 @@ Here is an example showing how to retrieve a job, given its identifier:
 $job = $verifalia->emailValidations->get('ec415ecd-0d0b-49c4-a5f0-f35c182e40ea');
 ```
 
+### Exporting email verification results in different output formats
+
+This library also allows to export the entries of a completed email validation
+job in different output formats through the `exportEntries()` function, with the goal of generating a human-readable representation
+of the verification results.
+
+> **WARNING**: While the output schema (columns / labels / data format) is fairly
+> complete, you should always consider it as subject to change: use the `get()` 
+> function instead if you need to rely on a stable output schema.
+
+Here is an example showing how to export a given email verification job as a comma-separated values (CSV) file:
+
+```php
+// Exports the validated entries for the job in the CSV format
+
+$export = $verifalia->emailValidations->exportEntries('722c2fd8-8837-449f-ad24-0330c597c993', ExportedEntriesFormat::CSV);
+
+// Stores the binary string into a file
+
+file_put_contents("my-list.csv", $export);
+```
+
 ### Don't forget to clean up, when you are done
 
 Verifalia automatically deletes completed jobs after a configurable
@@ -476,6 +539,16 @@ To add credit packs to your Verifalia account visit [https://verifalia.com/clien
 
 This section lists the changelog for the current major version of the library: for older versions,
 please see the [project releases](https://github.com/verifalia/verifalia-php-sdk/releases).
+
+### v3.1
+
+Released on November 13<sup>th</sup>, 2024
+
+- Added support for importing and checking mailing list files in multiple file formats, including CSV, TSV, Excel (.xls and .xlsx) and plain text files (.txt)
+- Added support for exporting completed email verification entries in multiple file formats, including CSV, TSV and Excel (.xls and .xlsx)
+- Extended support for GuzzleHTTP to version 7.*
+- Fixed an issue with the parsing of the waiting time hint while waiting for job completion
+- Improved documentation
 
 ### v3.0
 

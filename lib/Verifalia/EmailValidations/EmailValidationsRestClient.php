@@ -28,9 +28,12 @@ namespace Verifalia\EmailValidations {
 
     use DateTime;
     use Exception;
+    use GuzzleHttp\RequestOptions;
+    use Psr\Http\Message\ResponseInterface;
     use Verifalia\Internal\ParserUtils;
     use Verifalia\Exceptions\VerifaliaException;
-	use Verifalia\Internal\Rest\MultiplexedRestClient;
+    use Verifalia\Internal\Rest\InvocationOptions;
+    use Verifalia\Internal\Rest\MultiplexedRestClient;
 	use Verifalia\Common\ListingCursor;
 	use Verifalia\Common\Direction;
 
@@ -53,8 +56,8 @@ namespace Verifalia\EmailValidations {
          * Submits a new email validation for processing. By default, this method **waits** for the completion of the email
          * validation job. You can pass a `$waitOptions` parameter to request a different waiting behavior.
          *
-         * @param string|string[]|ValidationRequestEntry[]|ValidationRequest|ValidationRequestEntry $entries One or more
-         * entries (email addresses) to validate.
+         * @param string|string[]|ValidationRequestEntry[]|ValidationRequest|ValidationRequestEntry|FileValidationRequest $entries
+         * One or more email addresses to validate, provided either as a string, or an array of strings or a request instance.
          * @param ?WaitOptions $waitOptions Defines the options that specify how to wait for the completion of the email
          * validation job. It can be set to `null` to wait for completion using the default options provided by the SDK,
          * or set to an instance of `WaitOptions` for advanced scenarios and progress tracking.
@@ -65,45 +68,75 @@ namespace Verifalia\EmailValidations {
 		{
 			// Builds the input json structure
 
-			if ($entries instanceof ValidationRequest) {
-				$validation = $entries;
-			} else {
-				$validation = new ValidationRequest($entries);
-			}
+            $jsonData = array();
 
-			$data = array();
-            $mappedEntries = array();
+            if ($entries instanceof FileValidationRequest) {
+                $validation = $entries;
 
-            foreach ($validation->entries as $entry) {
-                $mappedEntry = array('inputData' => $entry->inputData);
+                // File-specific settings
 
-                if ($entry->custom !== null) {
-                    $mappedEntry['custom'] = $entry->custom;
+                if ($validation->startingRow !== null & $validation->startingRow !== 0) {
+                    $jsonData['startingRow'] = $validation->startingRow;
                 }
 
-                $mappedEntries[] = $mappedEntry;
+                if ($validation->endingRow !== null) {
+                    $jsonData['endingRow'] = $validation->endingRow;
+                }
+
+                if ($validation->column !== null & $validation->column !== 0) {
+                    $jsonData['column'] = $validation->column;
+                }
+
+                if ($validation->sheet !== null & $validation->sheet !== 0) {
+                    $jsonData['sheet'] = $validation->sheet;
+                }
+
+                if ($validation->lineEnding !== null) {
+                    $jsonData['lineEnding'] = $validation->lineEnding;
+                }
+            }
+            else {
+                if ($entries instanceof ValidationRequest) {
+                    $validation = $entries;
+                } else {
+                    $validation = new ValidationRequest($entries);
+                }
+
+                $mappedEntries = array();
+
+                foreach ($validation->entries as $entry) {
+                    $mappedEntry = array('inputData' => $entry->inputData);
+
+                    if ($entry->custom !== null) {
+                        $mappedEntry['custom'] = $entry->custom;
+                    }
+
+                    $mappedEntries[] = $mappedEntry;
+                }
+
+                $jsonData['entries'] = $mappedEntries;
             }
 
-            $data['entries'] = $mappedEntries;
+            // Common settings
 
             if ($validation->name !== null) {
-                $data['name'] = $validation->name;
+                $jsonData['name'] = $validation->name;
             }
 
 			if ($validation->deduplication !== null) {
-				$data['deduplication'] = $validation->deduplication;
+				$jsonData['deduplication'] = $validation->deduplication;
 			}
 
 			if ($validation->quality !== null) {
-				$data['quality'] = $validation->quality;
+				$jsonData['quality'] = $validation->quality;
 			}
 
 			if ($validation->priority !== null) {
-				$data['priority'] = $validation->priority;
+				$jsonData['priority'] = $validation->priority;
 			}
 
 			if ($validation->retention !== null) {
-				$data['retention'] = ParserUtils::dateIntervalToTimeSpanString($validation->retention);
+				$jsonData['retention'] = ParserUtils::dateIntervalToTimeSpanString($validation->retention);
 			}
 
             if ($validation->completionCallback !== null) {
@@ -117,7 +150,7 @@ namespace Verifalia\EmailValidations {
                     $callback["skipServerCertificateValidation"] = $validation->completionCallback->skipServerCertificateValidation;
                 }
 
-                $data['callback'] = $callback;
+                $jsonData['callback'] = $callback;
             }
 
             if ($waitOptions === null) {
@@ -126,14 +159,48 @@ namespace Verifalia\EmailValidations {
 
 			// Sends the request to the Verifalia servers
 
-			$response = $this->restClient->invoke(
-				MultiplexedRestClient::HTTP_METHOD_POST,
-				"email-validations",
-				[
-                    'waitTime' => $waitOptions->submissionWaitTime
-                ],
-				$data
-			);
+            if ($entries instanceof FileValidationRequest) {
+                // File imports require a multi-part form submission
+
+                $invocationOptions = new InvocationOptions();
+                $invocationOptions->requestOptions = [
+                    'multipart' => [
+                        [
+                            'name'     => 'inputFile',
+                            'contents' => $entries->file,
+                            'filename' => 'dummy',
+                            'headers'  => ['Content-Type' => $entries->contentType]
+                        ],
+                        [
+                            'name'     => 'settings',
+                            'contents' => json_encode($jsonData, JSON_FORCE_OBJECT),
+                            'headers'  => ['Content-Type' => 'application/json']
+                        ],
+                    ]
+                ];
+
+                $response = $this->restClient->invoke(
+                    MultiplexedRestClient::HTTP_METHOD_POST,
+                    "email-validations",
+                    [
+                        'waitTime' => $waitOptions->submissionWaitTime
+                    ],
+                    null,
+                    $invocationOptions
+                );
+            }
+            else {
+                $response = $this->restClient->invoke(
+                    MultiplexedRestClient::HTTP_METHOD_POST,
+                    "email-validations",
+                    [
+                        'waitTime' => $waitOptions->submissionWaitTime
+                    ],
+                    $jsonData
+                );
+            }
+
+            // Handles the response
 
 			$statusCode = $response->getStatusCode();
 			$body = $response->getBody();
@@ -210,6 +277,44 @@ namespace Verifalia\EmailValidations {
 					throw new VerifaliaException("Unexpected HTTP status code $statusCode. Body: $body");
 			}
 		}
+
+        /**
+         * @param string $id The unique identifier of the validation job to retrieve.
+         * @param string $format The requested file format. See `ExportedEntriesFormat` for a list of the supported file formats.
+         * @return string|null A binary string with the data exported in the requested format.
+         * @see ExportedEntriesFormat for a list of the supported file formats.
+         */
+        public function exportEntries(string $id, string $format)
+        {
+            $invocationOptions = new InvocationOptions();
+            $invocationOptions->requestOptions = [
+                RequestOptions::HEADERS => [
+                    'Accept' => $format
+                ]
+            ];
+
+            $response = $this->restClient->invoke(MultiplexedRestClient::HTTP_METHOD_GET,
+                "email-validations/$id/entries",
+                null,
+                null,
+                $invocationOptions);
+
+            $statusCode = $response->getStatusCode();
+            $body = $response->getBody();
+
+            switch ($statusCode) {
+                case MultiplexedRestClient::HTTP_STATUS_OK: {
+                    return $body->getContents();
+                }
+
+                case MultiplexedRestClient::HTTP_STATUS_NOT_FOUND:
+                case MultiplexedRestClient::HTTP_STATUS_GONE:
+                    return null;
+
+                default:
+                    throw new VerifaliaException("Unexpected HTTP status code $statusCode. Body: $body");
+            }
+        }
 
         /**
          * @throws VerifaliaException

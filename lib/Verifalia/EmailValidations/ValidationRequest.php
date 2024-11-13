@@ -32,59 +32,12 @@ namespace Verifalia\EmailValidations {
     /**
      * Represents an email validation request to be submitted against the Verifalia API.
      */
-    class ValidationRequest
+    class ValidationRequest extends ValidationRequestBase
 	{
         /**
          * @var ValidationRequestEntry[] One or more `ValidationRequestEntry` containing the email addresses to validate.
          */
 		public $entries;
-
-        /**
-         * @var ?string A reference to the expected results quality level for this request. Quality levels determine how Verifalia validates
-         * email addresses, including whether and how the automatic reprocessing logic occurs (for transient statuses) and the
-         * verification timeouts settings.
-         * Use one of `Standard`, `High` or `Extreme` or a custom quality level ID if you have one (custom quality levels
-         * are available to premium plans only).
-         * @see QualityLevelName for a list of the advertised quality levels names.
-         */
-		public $quality;
-
-        /**
-         * @var ?string The strategy employed by Verifalia to identify duplicate email addresses during a multiple items
-         * validation process. Duplicated items (after the first occurrence) will have the `Duplicate` status.
-         * @see DeduplicationMode for a list of the supported deduplication strategies.
-         */
-		public $deduplication;
-
-        /**
-         * @var ?int Specifies the priority (speed) of a validation job relative to the parent Verifalia account. If
-         * there are multiple concurrent validation jobs in an account, this value allows you to adjust the processing
-         * speed of a specific job in comparison to others. The valid range for this priority spans from 0 (lowest) to
-         * 255 (highest), with 127 representing normal priority. If not specified, Verifalia processes all concurrent
-         * validation jobs for an account at the same speed.
-         */
-        public $priority;
-
-        /**
-         * @var ?DateInterval Defines the data retention period for this verification job in Verifalia. After
-         * this specified period, the job will be automatically deleted. If set to null, the service defaults to the
-         * retention period associated with the user or browser app submitting the job. A verification job can be
-         * deleted at any time before its retention period using the `delete()` function. The configured retention
-         * period, if specified, must be within the range of 5 minutes to 30 days.
-         */
-		public $retention;
-
-        /**
-         * @var ?string Allows to assign an optional custom name to the validation job for personal reference. This name
-         * will be included in subsequent API calls and displayed in the Verifalia client area.
-         */
-        public $name;
-
-        /**
-         * @var ?CompletionCallback Allows to define an optional URL which Verifalia will invoke once the results for
-         * this job are ready.
-         */
-        public $completionCallback;
 
         /**
          * Initializes a `ValidationRequest` to be submitted to the Verifalia email validation engine.
@@ -122,5 +75,4 @@ namespace Verifalia\EmailValidations {
 			}
 		}
 	}
-
 }

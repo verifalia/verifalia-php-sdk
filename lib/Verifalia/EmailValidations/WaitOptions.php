@@ -90,25 +90,20 @@ namespace Verifalia\EmailValidations {
 
 			$delay = max(5, min(30, pow(2, log10($validationOverview->noOfEntries) - 1)));
 
-			if (property_exists($validationOverview, 'progress') && property_exists($validationOverview->progress, 'estimatedTimeRemaining')) {
-				preg_match("/^(?:(\d*?)\.)?(\d{2})\:(\d{2})\:(\d{2})(?:\.(\d*?))?$/", $validationOverview->progress->estimatedTimeRemaining, $timespanMatch);
+            if (!empty($validationOverview->progress))
+            {
+                if (!empty($validationOverview->progress->estimatedTimeRemaining))
+                {
+                    $delay = $validationOverview->progress->estimatedTimeRemaining->s;
+                    $delay += $validationOverview->progress->estimatedTimeRemaining->i * 60;
+                    $delay += $validationOverview->progress->estimatedTimeRemaining->h * 3600;
+                    $delay += $validationOverview->progress->estimatedTimeRemaining->d * 3600 * 24;
 
-				if (!empty($timespanMatch)) {
-					$hours = $timespanMatch[2];
-					$minutes = $timespanMatch[3];
-					$seconds = $timespanMatch[4];
-	
-					// Calculate the delay (in seconds)
-	
-					$delay = $seconds;
-					$delay += $minutes * 60;
-					$delay += $hours * 3600;
+                    // TODO: Follow the ETA more precisely
 
-					// TODO: Follow the ETA more precisely: as a safety net, we are constraining it to a maximum of 30s for now.
-	
-					$delay = max(5, min(30, $delay));
-				}
-			}
+                    $delay = max(5, min(30, $delay));
+                }
+            }
 
 			sleep($delay);
 		}
