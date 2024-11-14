@@ -53,6 +53,7 @@ To learn more about Verifalia please see [https://verifalia.com](https://verifal
 * [Managing credits](#managing-credits-)
   * [Getting the credits balance](#getting-the-credits-balance-)
 * [Changelog / What's new](#changelog--whats-new)
+  * [v3.1](#v31)
   * [v3.0](#v30)
 
 ## Getting started
